@@ -1,0 +1,367 @@
+
+- Mettre des commentaires pour chaque fonction
+-Respecter norme :
+pip install flake8
+alias norminette_python=flake8
+
+-Reinforcement Learning (RL)
+
+projet:
+un simulateur complet d’apprentissage par renforcement avec mémoire (Q-learning), entraîné par répétition sur un environnement dynamique.
+
+State → Action → Reward → Update
+
+	FLUX de donnees
+1. Environment génère State
+2. Agent reçoit State
+3. Agent choisit Action
+4. Environment exécute Action
+5. Environment renvoie Reward + nouveau State
+6. Agent update Q
+7. UI affiche
+8. repeat
+
+
+construire :
+
+un simulateur + un cerveau + une mémoire + une boucle d’apprentissage + une interface
+
+ ordre logique réel :
+1. Game (Snake + board)
+2. State encoding
+3. Actions
+4. Rewards
+5. Agent (Q-learning)
+6. Training loop
+7. Exploration
+8. Save/Load
+9. CLI
+10. Optimization
+11. Evaluation
+
+
+# Learn2Slither — Roadmap (RL Q-Learning)
+
+Guide étape par étape pour réaliser le projet
+
+---
+
+- [ ] Comprendre :
+  - Environment (le jeu)
+  - Agent (IA)
+  - State (vision)
+  - Action (choix)
+  - Reward (récompense)
+  - Q-learning (apprentissage)
+
+---
+
+#  PHASE 1 — Setup projet
+
+- [ ] Installer dépendances (flake8 voir sujet)
+
+
+---
+
+#  PHASE 2 — Environment (le jeu)
+
+- [ ] Créer board 10x10
+- [ ] Ajouter snake (taille 3)
+- [ ] Générer pommes :
+  - 2 green apples
+  - 1 red apple
+- [ ] Implémenter déplacements
+- [ ] Implémenter collisions :
+  - mur
+  - snake
+  - self-collision
+- [ ] Implémenter game over conditions
+
+---
+
+#  PHASE 3 — Game mechanics
+
+- [ ] Manger pomme verte → +1 length
+- [ ] Manger pomme rouge → -1 length
+- [ ] Respawn pommes automatiquement
+- [ ] Si length == 0 → game over
+
+---
+
+#  PHASE 4 — State (vision de l’IA)
+
+- [ ] Créer représentation du board pour l’IA
+- [ ] Encoder avec symboles :
+  - W = wall
+  - H = head
+  - S = body
+  - G = green apple
+  - R = red apple
+  - 0 = empty
+- [ ] Limiter info à la vision du snake uniquement
+- [ ] Tester state output
+
+---
+
+#  PHASE 5 — Actions
+
+- [ ] Implémenter 4 actions :
+  - UP
+  - DOWN
+  - LEFT
+  - RIGHT
+- [ ] Connecter actions au déplacement snake
+- [ ] Vérifier cohérence des mouvements
+
+---
+
+#  PHASE 6 — Reward system
+
+- [ ] Définir rewards :
+  - + pour pomme verte
+  - - pour pomme rouge
+  - petit - pour action inutile
+  - gros - pour game over
+- [ ] Tester cohérence des rewards
+
+---
+
+#  PHASE 7 — Agent (Q-learning)
+
+- [ ] Créer Q-table OU réseau de neurones
+- [ ] Implémenter Q(state, action)
+- [ ] Choisir action (policy)
+- [ ] Implémenter update Q-learning
+
+---
+
+#  PHASE 8 — Training loop
+
+- [ ] Implémenter episodes (games)
+- [ ] Reset environment à chaque session
+- [ ] Boucle :
+  - state → action → reward → update
+- [ ] Lancer plusieurs sessions
+
+---
+
+#  PHASE 9 — Exploration vs Exploitation
+
+- [ ] Implémenter epsilon-greedy
+- [ ] Ajouter random actions
+- [ ] Ajuster exploration au fil du temps
+
+---
+
+#  PHASE 10 — Save / Load models
+
+- [ ] Sauvegarder Q-table / modèle
+- [ ] Charger modèle existant
+- [ ] Créer dossier /models
+- [ ] Générer :
+  - model_1.txt
+  - model_10.txt
+  - model_100.txt
+
+---
+
+#  PHASE 11 — Evaluation mode
+
+- [ ] Mode sans apprentissage (-dontlearn)
+- [ ] Tester modèles entraînés
+- [ ] Mesurer performance :
+  - longueur max
+  - durée survie
+
+---
+
+# PHASE 12 — Interface graphique
+
+- [ ] Affichage board
+- [ ] Mode vitesse variable
+- [ ] Mode step-by-step
+- [ ] Debug terminal (state + action)
+
+---
+
+#  PHASE 13 — CLI (command line)
+
+- [ ] Ajouter paramètres :
+  - -sessions
+  - -load
+  - -save
+  - -visual on/off
+  - -step-by-step
+  - -dontlearn
+
+---
+
+#  PHASE 14 — Optimisation
+
+- [ ] Désactiver UI pour training rapide
+- [ ] Optimiser boucle d’entraînement
+- [ ] Réduire logs inutiles
+
+---
+
+#  PHASE 15 — Validation finale
+
+- [ ] Tester 1 session model
+- [ ] Tester 10 sessions model
+- [ ] Tester 100 sessions model
+- [ ] Vérifier progression IA
+
+---
+
+#  OBJECTIF FINAL
+
+- [ ] Snake atteint longueur ≥ 10
+- [ ] Snake survit longtemps
+- [ ] IA améliore ses performances avec le temps
+
+
+--------------------------------
+
+Board = l'état complet du jeu (la réalité entière)
+
+State = l'information visible par l'agent pour prendre une décision
+
+	ORDRE:
+State -> Choix de l'Action(explore/exploite avec Epsilon-greedy) -> Environment applique l'action -> Reward -> Nouveau State -> Update Q-value(Bellman)
+
+
+
+Q(State, Action) = Q-value
+La Q-value est : une note attribuée à une action dans une situation donnée.
+Et le Q-learning consiste à améliorer ces notes au fil de l'expérience.
+
+La méthode classique : epsilon-greedy (choisir une action pendant l'apprentissage)
+ On définit une valeur: epsilon = 0.1
+   ->Ce qui signifie : 10% du temps → exploration ET 90% du temps → exploitation
+
+
+Avant de choisir une action , on fait un tirage aleatoire :
+si random < epsilon -> On Explore
+sinon -> On exploite 
+
+
+En termes très simples
+Le cerveau de l'agent contient deux mécanismes :
+1. Mémoire = Q-table: Elle stocke ce qu'il a appris.
+
+2. Comportement + epsilon-greedy
+Elle décide :
+"Est-ce que je fais confiance à ce que je sais déjà ou est-ce que j'essaie quelque chose de nouveau ?
+
+
+Le reward est utiliser pour mettre a jour la valeur de q-value
+
+----------------------------------------
+
+
+
+Étape 1 -> Comprendre le jeu:
+  comment le snake bouge - quand il meurt
+  quand il grandit - quand il rétrécit
+
+Étape 2 -> Comprendre la boucle d'une partie.
+
+  Nouvelle partie
+  ↓
+  Snake observe
+  ↓
+  Choisit une direction
+  ↓
+  Le monde change
+  ↓
+  Reward
+  ↓
+  Nouvelle observation
+  ↓
+  ...
+  ↓
+  Game over
+
+Étape 3 -> Comprendre le state.
+!!!Concept important du sujet.
+  ->l'agent ne voit que ce que le snake voit.
+
+Étape 4 -> Comprendre la Q-table.
+  Pas la formule de Bellman.
+  Juste : Qu'est-ce qu'une Q-table stocke ?
+
+Étape 5 -> Comprendre comment l'agent choisit une action.
+  Cad: exploitation - exploration - epsilon-greedy
+
+Étape 6 -> Comprendre Bellman.
+
+---------------------------
+
+W=wall H=Head S=Body G=Green apple R=Red apple O=Empty space 
+
+Body serpent  = 3cases (1H(le head) + 2S (le corps)) HSS 
+
+Quand le snake mange une pomme verte -> Taille +1 a la queue
+Quand le snkae mange une pomme rouge -> Taille -1
+SI TAILLE = 0 -> GAME OVER 
+COLLISION = GAME OVER (si la tete arrrive sur une case deja occupe par S(body))
+
+----------------
+A chaque action :
+1. nouvelle position tête
+2. ajouter au début de la liste
+3. enlever dernier élément (ou pas selon pomme)
+
+
+|
+|
+|--------------------x
+y
+^
+00HSS00000 --> ligne de x ou y= 0
+0000000000 --> y = 1
+0000000000 --> y = 2
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000
+0000000000 --> x
+|
+y = 10 et x = 0
+
+snake=(x,y) HSS vaut ci dessous
+Ici snake = [(2,0), (3,0), (4,0)]
+
+00H0000000
+00SS000000
+
+| Action | Effet |
+| ------ | ----- |
+| RIGHT  | x + 1 |
+| LEFT   | x - 1 |
+| UP     | y - 1 |
+| DOWN   | y + 1 |
+------------------
+
+Deplacer le snkae:
+  -Calculer la nouvelle tete
+    new_head = (x + dx, y + dy) Ex: RIGHT -> dx = +1 et UP -> dy = -1
+  -Recuperer le corps actuel
+    snake = [(2,1), (3,1), (4,1)]
+  -Enlever la queue
+    on retire le dernier eleemnt
+  -Ajouter la nouvelle tete devant
+Donc new_snake = [new_head] + snake[:-1] 
+snake[:-1] = prendre tout les elements auf le dernier 
+Ex: snake = [A, B, C, D] alors snake[:-1] = [A, B, C] -> D(la queue) est supprimee
+
+A chaque moouvement :
+1. je crée une nouvelle tête
+2. je supprime la queue
+3. j’ajoute la tête devant
+
+new_snake = snake.copy()
+new_snake.pop()          # enlève la queue
+new_snake.insert(0, new_head)  # ajoute la tête devant
