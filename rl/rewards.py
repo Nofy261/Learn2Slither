@@ -1,0 +1,1 @@
+# definit les reward , mager pomme verte, rouge , mourrir 

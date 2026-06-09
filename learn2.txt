@@ -345,6 +345,21 @@ Ici snake = [(2,0), (3,0), (4,0)]
 | DOWN   | y + 1 |
 ------------------
 
+RIGHT = (x + 1, y)
+LEFT  = (x - 1, y)
+UP    = (x, y - 1)
+DOWN  = (x, y + 1)
+
+               y - 1
+                UP
+                 ↑
+                 |
+LEFT ← x - 1  Snake  x + 1 → RIGHT
+                 |
+                 ↓
+               DOWN
+               y + 1
+
 Deplacer le snkae:
   -Calculer la nouvelle tete
     new_head = (x + dx, y + dy) Ex: RIGHT -> dx = +1 et UP -> dy = -1
@@ -365,3 +380,19 @@ A chaque moouvement :
 new_snake = snake.copy()
 new_snake.pop()          # enlève la queue
 new_snake.insert(0, new_head)  # ajoute la tête devant
+
+
+
+
+          W
+          0
+          0
+          G
+          R
+          0
+          0
+          0
+W000000000HW
+          S
+          0
+          W
