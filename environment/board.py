@@ -9,3 +9,15 @@
 #mettre a jour le board , savoir si une case est vode ou ocuupé
 # affiche ou return le grille
 
+#Stocker le monde
+#Vérifier collisions
+#Mettre à jour le snake
+#Gérer les pommes
+
+#initialisation du board
+
+class Board:
+
+    def __init__(self):
+        self.width = 10 #largeur (x)
+        self.height = 10 #longueur(y)

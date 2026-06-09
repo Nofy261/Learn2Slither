@@ -383,16 +383,17 @@ new_snake.insert(0, new_head)  # ajoute la tête devant
 
 
 
+Phase 1 :
+Construire le jeu
 
-          W
-          0
-          0
-          G
-          R
-          0
-          0
-          0
-W000000000HW
-          S
-          0
-          W
+Phase 2 :
+Construire l'IA
+
+Phase 3 :
+Construire l'affichage graphique demandé par le sujet
+
+Phase 4 :
+Ajouter vitesse configurable et mode step-by-step
+
+Leprogramme doit comprendre des options :
+training /load /visual / step-by-step /dontlearn
