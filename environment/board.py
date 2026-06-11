@@ -30,3 +30,32 @@ class Board:
             self.grid.append(row)
 
 
+
+
+    # parcourir les lignes 
+    # parcourir les colonnes 
+    # grid[y][x]
+    # grid[0][0] = "W"
+    # grid[0][1] = 'W'
+    # parcourir x -> remplir la premiere ligne de W
+
+    #def create_walls(self):
+    #    for x in range(self.width):
+    #        self.grid[0][x] = 'W'
+    #        self.grid[self.height - 1][x] = 'W'
+    #    for y in range(self.height):
+    #        self.grid[y][0] = 'W'
+     #       self.grid[y][self.width - 1] = 'W'
+
+
+    def create_walls(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                if y == 0 or y == self.height - 1:
+                    self.grid[y][x] = 'W'
+                elif x == 0 or x == self.width - 1:
+                    self.grid[y][x] = 'W'
+
+    def create_snake(self):
+        
+
