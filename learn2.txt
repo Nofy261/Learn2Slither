@@ -334,6 +334,9 @@ y = 10 et x = 0
 snake=(x,y) HSS vaut ci dessous
 Ici snake = [(2,0), (3,0), (4,0)]
 
+x = ligne horizontale de gauche a droite
+y = ligne verticale de haut en bas
+
 00H0000000
 00SS000000
 
@@ -359,6 +362,12 @@ LEFT ← x - 1  Snake  x + 1 → RIGHT
                  ↓
                DOWN
                y + 1
+
+
+snake: (x, y) -> ce que le snake pense
+board: tableau 2D → grid[y][x] -> ce que le programme stocke
+
+une grille = la ligne de 10 cases
 
 Deplacer le snkae:
   -Calculer la nouvelle tete

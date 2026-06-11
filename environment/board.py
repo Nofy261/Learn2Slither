@@ -15,9 +15,18 @@
 #Gérer les pommes
 
 #initialisation du board
+# class permet de regrouper tout dnas un seul objet
 
 class Board:
 
     def __init__(self):
         self.width = 10 #largeur (x)
         self.height = 10 #longueur(y)
+        self.grid = []
+        for _ in range(self.height):
+            row = []
+            for _ in range(self.width):
+                row.append(0)
+            self.grid.append(row)
+
+
