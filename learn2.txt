@@ -406,3 +406,16 @@ Ajouter vitesse configurable et mode step-by-step
 
 Leprogramme doit comprendre des options :
 training /load /visual / step-by-step /dontlearn
+
+----------------------
+
+snake = [H, S, S]
+index    0  1  2
+
+self.snake = [(x, y), (x, y), (x, y)]
+----------
+for i, (x, y) in enumerate(self.snake):
+  if i == 0:
+    self.grid[y][x] = "H"
+  else:
+    self.grid[y][x] = "S"
