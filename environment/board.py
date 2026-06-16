@@ -24,19 +24,17 @@ class Board:
     def __init__(self):
         self.width = 10 #largeur (x)
         self.height = 10 #longueur(y)
-        self.grid = []
-        for _ in range(self.height):
-            row = []
-            for _ in range(self.width):
-                row.append(0)
-            self.grid.append(row)
+        self.grid = [ #list de ligne
+            [0 for _ in range(self.width)] #on creer une ligne de 10cases remplit de 0
+            for _ in range(self.height)    #on le repete 10fois
+        ]
 
 
     def create_snake(self):
 
         """ Crée un serpent de 3 cases placé aléatoirement sur la grille de manière contiguë.
-            Une position et une direction valides sont choisies, puis on vérifie que
-            le serpent reste dans la grille.
+            Une position et une direction valides sont choisies, puis on vérifie que tout le corps
+            du serpent est bien dans la grille.
             Le serpent est ensuite stocké dans self.snake et affiché dans la grille 
             avec 'H' pour la tête et 'S' pour le corps. """
 
@@ -52,10 +50,10 @@ class Board:
             x = random.randint(2, self.width - 3)
             y = random.randint(2, self.height - 3)
 
-            #direction random
+            #direction random 
             dx, dy = random.choice(directions)
 
-            #construire le snake
+            #construire le snake tete->corps->queue [Head, Body, Body]
             snake = [
                 (x, y),
                 (x - dx, y - dy),
@@ -75,7 +73,7 @@ class Board:
                 self.snake = snake
                 break
 
-        #ecrit le snake dnas la grille
+        #affiche le snake dnas la grille
         for i, (x, y) in enumerate(self.snake):
             if i == 0:
                 self.grid[y][x] = "H"
@@ -95,7 +93,11 @@ class Board:
     def spawn_green_apples(self):
 
         """ cette fonction genere deux pommes vertes à des positions aleatoire valide
-            et les stocke dans self.green_apples """
+            et les stocke dans self.green_apples .
+            on creer une liste de pomme verte , on genere aleatoirement la place de la pomme
+            on verifie si la place qui a ete genere est libre , si oui on le stocke dans la liste
+            sinon on repart dans la boucle et on recommence jusque quand la liste est remplie de 2pommes
+        """
 
         self.green_apples = []
 
@@ -125,4 +127,43 @@ class Board:
                 self.grid[y][x] = "R"
                 break
 
+
+    def reset(self):
+        self.grid = [
+            [0 for _ in range(self.width)]
+            for _ in range(self.height)
+        ]
+
+        self.snake = []
+        self.green_apples = []
+        self.red_apple = None
+
+        self.create_snake()
+        self.spawn_green_apples()
+        self.spawn_red_apple()
+
+#update_grid synchronise la représentation visuelle avec l’état réel du jeu
+
+    def update_grid(self):
+        # reset de la grille
+        self.grid = [
+            [0 for _ in range(self.width)]
+            for _ in range(self.height)
+        ]
+
+        # placer le snake
+        for i, (x, y) in enumerate(self.snake):
+            if i == 0:
+                self.grid[y][x] = "H"
+            else:
+                self.grid[y][x] = "S"
+
+        # placer les green apples
+        for x, y in self.green_apples:
+            self.grid[y][x] = "G"
+
+        # placer la red apple
+        if self.red_apple:
+            x, y = self.red_apple
+            self.grid[y][x] = "R"
 

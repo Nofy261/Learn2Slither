@@ -419,3 +419,46 @@ for i, (x, y) in enumerate(self.snake):
     self.grid[y][x] = "H"
   else:
     self.grid[y][x] = "S"
+  ------------------
+
+ligne = y
+colonne = x
+grid[y][x] = grid[ligne][colonne] 
+
+liste de ligne:
+self.grid = [
+    [0, 0, 0],  # ligne 0
+    [0, 0, 0],  # ligne 1
+    [0, 0, 0]   # ligne 2
+]
+---> Le premier indice choisit la ligne : self.grid[1] donne [0, 0, 0]
+---> Puis le deuxième indice choisit la colonne dans cette ligne : self.grid[1][2] donne 0 
+--> self.grid[y][x] signifie aller à la ligne y et aller à la colonne x
+
+Coordoonnees = (x, y)
+
+snake = [(x, y), (x, y), (x, y)]
+          Head     S        S
+
+snake[0] = cerveau du serpent
+snake[1] = corps
+snake[2] = queue
+
+Board = monde figé
+Game = vie du monde (qui évolue)
+Agent = cerveau qui agit dans ce monde
+-----------------
+1. agent choisit une action
+        ↓
+2. game.step(action)
+        ↓
+3. retourne (state, reward, done)
+        ↓
+4. agent apprend avec ces infos
+        ↓
+5. nouvelle action
+
+
+action = agent.choose_action(state)
+new_state, reward, done = game.step(action)
+agent.learn(state, action, reward, new_state, done)
