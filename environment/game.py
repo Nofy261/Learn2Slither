@@ -72,12 +72,15 @@ class Game:
         self.score = 0
         self.game_over = False
 
+    """
+    VErsion 1
+
     def move_snake(self, action):
 
-        """
-        juste déplacer la tête + suivre le corps
-        on gere le deplacement pure sans condition cad deplacement de une case du serpent
-        """
+        
+        #juste déplacer la tête + suivre le corps
+        #on gere le deplacement pure sans condition cad deplacement de une case du serpent
+        
         #  position de la tete actuelle  
         head = self.board.snake[0] 
         x, y = head
@@ -100,6 +103,29 @@ class Game:
         #deplacer le snake
         self.board.snake.insert(0, new_head)
         self.board.snake.pop()
+    """
+
+
+    # Version amelioré a tester
+    def move_snake(self, action):
+
+        head_x, head_y = self.board.snake[0]
+
+        directions = {
+            0: (1, 0),   # droite
+            1: (-1, 0),  # gauche
+            2: (0, -1),  # haut
+            3: (0, 1)    # bas
+        }
+
+        dx, dy = directions.get(action, (0, 0))
+
+        new_head = (head_x + dx, head_y + dy)
+
+        # mise à jour snake
+        self.board.snake.insert(0, new_head)
+        self.board.snake.pop()
+
 
 
     def check_collision(self):
@@ -109,11 +135,13 @@ class Game:
         #verif collison avec le mur
         if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
             self.game_over = True
+            self.reward = -10
             return
         
         #Vérif collision avec le corps du snake
         if head in self.board.snake[1:]:
             self.game_over = True
+            self.reward = -10
             return
 
 
@@ -154,49 +182,110 @@ class Game:
             self.board.spawn_red_apple()
     
 
+    # utils
+    def look_direction(self, dx, dy):
+
+        head_x, head_y = self.board.snake[0]
+        vision = []
+
+        x, y = head_x, head_y
+
+        while True:
+            x += dx
+            y += dy
+
+            if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
+                vision.append("W")
+                break
+
+            cell = self.board.grid[y][x]
+
+            if cell == 0:
+                vision.append("0")
+            elif cell == "S":
+                vision.append("S")
+            elif cell == "G":
+                vision.append("G")
+            elif cell == "R":
+                vision.append("R")
+            elif cell == "H":
+                vision.append("H")
+            
+        return vision
+
 
     def get_state(self):
 
-        #return ce que le serpent voit 
-    
+        left = self.look_direction(-1, 0)
+        right = self.look_direction(1, 0)
+        up = self.look_direction(0, -1)
+        down = self.look_direction(0, 1)
 
+        return (left, right, up, down)
 
-
-
-
-
-
-
-    #step = une action de l’agent + mise à jour du jeu +
-    # retour de l’état et du reward”
     #step = 1 mouvement + conséquences + retour info a l'agent
     #step = 1 actin -> consequesnces -> nouvel etat
 
+    """
+    #version 1 
     def step(self, action):
 
     #qd le snake fait une action , le game change aussi
     #step fournit les conséquences d’une action à l’agent, qui les utilise pour apprendre
 
+        self.reward = 0
         # bouger snake
-        self.move_snake(self, action)
+        self.move_snake(action)
         # vérifier collisions (peut finir le jeu)
-        self.check_collision(self)
+        self.check_collision()
         # gérer pommes (modifie snake + reward partiel)
         self.handle_apples()
         # reward par défaut (cas "rien mangé")
-        if not hasattr(self, "reward"):
+        
+        if self.reward == 0:
             self.reward = -0.01 #petit penalty temps
         
-
         self.board.update_grid()
 
         state = self.get_state()
         
-        return state, self.rewardreward, self.done
+        return state, self.reward, self.game_over
+    """
 
+    #version amelioré A TESTEr
 
+    def step(self, action):
 
+        # reset reward à chaque step
+        self.reward = 0
 
+        #  déplacer le snake
+        self.move_snake(action)
+
+        # vérifier collisions (mur + self)
+        self.check_collision()
+
+        # si game over → reward forte pénalité
+        if self.game_over:
+            self.reward = -10
+            state = self.get_state()
+            return state, self.reward, self.game_over
+
+        # gérer les pommes (green / red + reward intermédiaire)
+        self.handle_apples()
+
+        #reward par défaut si rien ne s’est passé
+        if self.reward == 0:
+            self.reward = -0.01  # petit penalty de temps
+
+        #mise à jour de la grille (pour vision)
+        self.board.update_grid()
+
+        # état observé par l’agent
+        state = self.get_state()
+
+        #retour RL standard
+        return state, self.reward, self.game_over
 
 
 
