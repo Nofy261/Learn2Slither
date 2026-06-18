@@ -457,8 +457,32 @@ Agent = cerveau qui agit dans ce monde
 4. agent apprend avec ces infos
         ↓
 5. nouvelle action
+------------
+
+
+apple = (x, y)
+
+apple[0] -> x
+apple[1] -> y
+
+------------
+
 
 
 action = agent.choose_action(state)
 new_state, reward, done = game.step(action)
 agent.learn(state, action, reward, new_state, done)
+
+------
+create_snake() = choisit une position aléatoire et construit le serpent
+
+self.snake = la position reelle du serpent
+  Ex: self.snake = [(5,5), (4,5), (3,5)]
+
+self.grid = carte complete du jeu 
+
+Et donc quand le snkae change de position cad self.snake a ete modifié , il faut 
+mettre a jour self.grid pour representer la nouvelle position 
+D'ou l'utilite de update_grid() 
+
+

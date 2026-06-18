@@ -36,7 +36,8 @@ class Board:
             Une position et une direction valides sont choisies, puis on vérifie que tout le corps
             du serpent est bien dans la grille.
             Le serpent est ensuite stocké dans self.snake et affiché dans la grille 
-            avec 'H' pour la tête et 'S' pour le corps. """
+            avec 'H' pour la tête et 'S' pour le corps. 
+        """
 
         directions = [
             (1, 0), #droite x = 1
@@ -145,6 +146,12 @@ class Board:
 #update_grid synchronise la représentation visuelle avec l’état réel du jeu
 
     def update_grid(self):
+
+        """sert a mettre a jour la grille a chaque mouvement du snake
+            on prend la position du serpent(les coordonnees qui sont stockés
+            dans self.snake) et on va les dessiner dans la grille(self.grid)
+        """
+
         # reset de la grille
         self.grid = [
             [0 for _ in range(self.width)]
@@ -166,4 +173,8 @@ class Board:
         if self.red_apple:
             x, y = self.red_apple
             self.grid[y][x] = "R"
+
+
+
+#step(action) -> move() -> update_grid()
 
