@@ -485,4 +485,108 @@ Et donc quand le snkae change de position cad self.snake a ete modifié , il fau
 mettre a jour self.grid pour representer la nouvelle position 
 D'ou l'utilite de update_grid() 
 
+---------
+
+AGENT
+  ↓ action
+GAME
+  ↓ logique (step)
+BOARD
+  ↓ état mis à jour
+GAME
+  ↓ state + reward + done
+AGENT (apprend)
+
+ACTION → STEP → NOUVEL ÉTAT
+
+Les partie de step():
+--> Action -> mouvement move_snake(action)
+--> Collision -> check_wall() et check_self()
+--> Pomme mangé? -> if head == apple: 
+                      grow_snake()
+                      score += 1
+--> A REVOIR Reward RL -> reward = +1 si pomme verte
+                 reward = -1 si mort
+                 reward =  sinon 
+--> Mise a jour du grid self.board.update_grid()
+--> return state, reward, done 
+----------------------
+
+
+Etapes du step():
+
+ÉTAPE 1 — déplacer le snake -> move_snake()
+  Gérer :
+    action → direction
+    nouvelle tête
+    déplacement du corps
+
+ÉTAPE 2 — collisions -> check_collision()
+  mur
+  lui-même
+  si collision → done = True
+
+ÉTAPE 3 — pommes -> handle_apple()
+  mange pomme verte → score +1
+  mange pomme rouge → bonus (si tu en as un)
+
+ÉTAPE 4 — reward (RL) -> compute_reward()
+  +1 si pomme
+  -1 si mort
+  0 sinon
+
+ÉTAPE 5 — update du board -> update_board()
+  self.board.update_grid()
+
+ÉTAPE 6 — return final
+  return state, reward, done
+
+---------
+
+head = (x, y) ou head = (5, 3)
+head[0] = x = 5
+head[1] = y = 3
+
+x, y = head
+
+--------
+
+nouvelle position = position actuelle + deplacement
+(new_x, new_y)  = (x, y) + (dx, dy)
+
+------
+Déplacement normal : Ajouter une tête et Retirer une queue
+Croissance (pomme verte) : Ajouter une tête et Ne pas retirer la queue
+
+Déplacement avec pomme rouge (où la longueur diminue) A GERER
+
+----------------
+🍏 Cas 1 — pomme verte => le snake grandit :
+    ajouter new_head
+    ne pas supprimer la queue
+
+🍎 Cas 2 — pomme rouge => le snake rétrécit :
+    ajouter new_head
+    supprimer la queue
+    MAIS aussi enlever un segment en plus
+
+Cas 3 — rien mangé => déplacement normal:
+    ajouter new_head
+    supprimer la queue
+
+Cas limite -- si longueur = 0 => game over
+
+--------
+
+Ajouter a la tete de liste = insert(0, element_to_add) => snake.insert(0, new_head)
+Enlever un element a la fin de liste = pop() => snake.pop()
+---
+
+snake[2:] -> on prend a partir de l'index 2 (l'index commence a 0) donc 2 et le reste de la liste
+snake[:2] -> on prend tout ce qui est avant l'index 2 donc 0 et 1
+snake[:] -> toute la liste
+
+
+
+A FAIRE get_state()
 
