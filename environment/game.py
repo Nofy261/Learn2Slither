@@ -64,6 +64,11 @@ class Game:
         self.score = 0
         self.game_over = False  # etat de la partie est fini ou pas
 
+        self.pending_green_spawn = False
+        self.pending_red_spawn = False
+
+        self.reward = 0
+
     def reset(self):
 
         """ relance une nouvelle partie propre """
@@ -72,38 +77,9 @@ class Game:
         self.score = 0
         self.game_over = False
 
-    """
-    VErsion 1
-
-    def move_snake(self, action):
-
-        
-        #juste déplacer la tête + suivre le corps
-        #on gere le deplacement pure sans condition cad deplacement de une case du serpent
-        
-        #  position de la tete actuelle  
-        head = self.board.snake[0] 
-        x, y = head
-
-        #convertir action -> direction (dx, dy)
-        if action == 0:
-            dx, dy = (1, 0)
-        elif action == 1:
-            dx, dy = (-1, 0)
-        elif action == 2:
-            dx, dy = (0, -1)
-        elif action == 3:
-            dx, dy = (0, 1)
-        else:
-            dx, dy = (0, 0)
-        
-        #calcul nouvelle tete new_x = x + dx et new_y = y + dy
-        new_head = (x + dx, y + dy)
-        
-        #deplacer le snake
-        self.board.snake.insert(0, new_head)
-        self.board.snake.pop()
-    """
+        self.reward = 0
+        self.pending_green_spawn = False
+        self.pending_red_spawn = False
 
 
     # Version amelioré a tester
@@ -162,7 +138,8 @@ class Game:
             self.reward = 1
             self.score += 1
             
-            self.board.spawn_green_apples()
+            #self.board.spawn_green_apples()
+            self.pending_green_spawn = True
 
         elif head == self.board.red_apple:
             #supprimer pomme rouge
@@ -179,7 +156,8 @@ class Game:
             if len(self.board.snake) == 0:
                 self.game_over = True
 
-            self.board.spawn_red_apple()
+            #self.board.spawn_red_apple()
+            self.pending_red_spawn = True
     
 
     # utils
@@ -198,20 +176,57 @@ class Game:
                 vision.append("W")
                 break
 
-            cell = self.board.grid[y][x]
-
-            if cell == 0:
-                vision.append("0")
-            elif cell == "S":
+            if (x, y) in self.board.snake:
                 vision.append("S")
-            elif cell == "G":
+                break
+
+            if (x, y) in self.board.green_apples:
                 vision.append("G")
-            elif cell == "R":
+                break
+
+            if (x, y) == self.board.red_apple:
                 vision.append("R")
-            elif cell == "H":
-                vision.append("H")
+                break
+
+            vision.append("0")
+
             
         return vision
+
+
+
+    def encode_direction(self, direction):
+
+        """
+        Transforme la vision brute d’une direction en informations simples pour l’agent RL.
+        Pour une direction donnée (liste de cases dans l’ordre de vision du snake),
+        on extrait 3 informations essentielles :
+        - danger : True si un mur (W) ou le corps du snake (S) est détecté
+        - green : True si une pomme verte (G) est visible avant tout obstacle
+        - red : True si une pomme rouge (R) est visible avant tout obstacle
+
+        Cette fonction permet de simplifier l’observation pour l’agent afin de
+        faciliter l’apprentissage par renforcement avec un vecteur de taille fixe.
+        
+        """
+
+        danger = False
+        green = False
+        red = False
+
+        for cell in direction:
+
+            if cell == "W" or cell == "S":
+                danger = True
+                break
+            if cell == "G":
+                green = True
+                break
+            if cell == "R":
+                red = True
+        
+        return (danger, green, red)
+
 
 
     def get_state(self):
@@ -221,36 +236,21 @@ class Game:
         up = self.look_direction(0, -1)
         down = self.look_direction(0, 1)
 
-        return (left, right, up, down)
+        left_state = self.encode_direction(left)
+        right_state = self.encode_direction(right)
+        up_state = self.encode_direction(up)
+        down_state = self.encode_direction(down)
+
+        return (
+            left_state +
+            right_state +
+            up_state +
+            down_state
+        )
 
     #step = 1 mouvement + conséquences + retour info a l'agent
     #step = 1 actin -> consequesnces -> nouvel etat
 
-    """
-    #version 1 
-    def step(self, action):
-
-    #qd le snake fait une action , le game change aussi
-    #step fournit les conséquences d’une action à l’agent, qui les utilise pour apprendre
-
-        self.reward = 0
-        # bouger snake
-        self.move_snake(action)
-        # vérifier collisions (peut finir le jeu)
-        self.check_collision()
-        # gérer pommes (modifie snake + reward partiel)
-        self.handle_apples()
-        # reward par défaut (cas "rien mangé")
-        
-        if self.reward == 0:
-            self.reward = -0.01 #petit penalty temps
-        
-        self.board.update_grid()
-
-        state = self.get_state()
-        
-        return state, self.reward, self.game_over
-    """
 
     #version amelioré A TESTEr
 
@@ -273,6 +273,15 @@ class Game:
 
         # gérer les pommes (green / red + reward intermédiaire)
         self.handle_apples()
+
+        if self.pending_green_spawn:
+            self.board.spawn_green_apples()
+            self.pending_green_spawn = False
+        
+
+        if self.pending_red_spawn:
+            self.board.spawn_red_apple()
+            self.pending_red_spawn = False
 
         #reward par défaut si rien ne s’est passé
         if self.reward == 0:

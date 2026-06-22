@@ -590,3 +590,12 @@ snake[:] -> toute la liste
 
 A FAIRE get_state()
 
+
+A REVOIR
+Pourquoi on fait ça ?
+Parce que :
+👉 un agent RL ne comprend pas des listes de lettres
+Il comprend :
+✔ True / False
+✔ 0 / 1
+✔ vecteurs fixes

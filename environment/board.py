@@ -74,12 +74,12 @@ class Board:
                 self.snake = snake
                 break
 
-        #affiche le snake dnas la grille
-        for i, (x, y) in enumerate(self.snake):
-            if i == 0:
-                self.grid[y][x] = "H"
-            else:
-                self.grid[y][x] = "S"
+        #affiche le snake dnas la grille dans draw
+        #for i, (x, y) in enumerate(self.snake):
+        #    if i == 0:
+        #        self.grid[y][x] = "H"
+        #    else:
+        #        self.grid[y][x] = "S"
 
 
 
@@ -109,24 +109,26 @@ class Board:
             y = random.randint(0, self.height - 1)
 
             #verif si la case est libre
-            if self.grid[y][x] == 0:
+            #if self.grid[y][x] == 0:
+            if (x, y) not in self.snake and (x, y) not in self.green_apples:
                 #verif le snake
-                if (x, y) not in self.snake:
-                    self.grid[y][x] = "G"
+                #if (x, y) not in self.snake:
+                #    self.grid[y][x] = "G"
                     self.green_apples.append((x, y))
 
-            
+
     def spawn_red_apple(self):
 
+        """choisit la position de la pome rouge """
         while True:
             x = random.randint(0, self.width - 1)
             y = random.randint(0, self.height - 1)
 
-            if self.grid[y][x] == 0 and (x, y) not in self.snake and (x, y) not in self.green_apples:
-                
+            if (x, y) not in self.snake and (x, y) not in self.green_apples:
                 self.red_apple = (x, y)
-                self.grid[y][x] = "R"
                 break
+
+
 
 
     def reset(self):
@@ -152,7 +154,8 @@ class Board:
 
         """sert a mettre a jour la grille a chaque mouvement du snake
             on prend la position du serpent(les coordonnees qui sont stockés
-            dans self.snake) et on va les dessiner dans la grille(self.grid)
+            dans self.snake) et on va les dessiner dans la grille(self.grid).
+            synchroniser la grille avec l’état réel du jeu
         """
 
         # reset de la grille
