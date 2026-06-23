@@ -599,3 +599,17 @@ Il comprend :
 ✔ True / False
 ✔ 0 / 1
 ✔ vecteurs fixes
+
+Avant update_grid , la grille ressemble a ceci 
+0 0 0 0 0 
+0 0 0 0 0 
+0 0 0 0 0 
+0 0 0 0 0 
+0 0 0 0 0 .....
+
+Apres update_grid , la grille devient
+0 0 0 0 0
+0 G 0 0 0
+0 0 H S S
+0 0 0 R 0
+0 0 0 0 0....
