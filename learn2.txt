@@ -600,16 +600,93 @@ Il comprend :
 ✔ 0 / 1
 ✔ vecteurs fixes
 
-Avant update_grid , la grille ressemble a ceci 
-0 0 0 0 0 
-0 0 0 0 0 
-0 0 0 0 0 
-0 0 0 0 0 
-0 0 0 0 0 .....
+---------
 
-Apres update_grid , la grille devient
-0 0 0 0 0
-0 G 0 0 0
-0 0 H S S
-0 0 0 R 0
-0 0 0 0 0....
+get_state retourne l'etat des 4 visions du serpent :
+etat -> [valeur_DROITE, valeur_GAUCHE, valeur_HAUT, valeur_BAS] sous forme de:
+
+etat -> [valeur_DROITE] = [Danger ou pas - Pomme verte ou pas - Pomme rouge ou pas]
+
+state -> [valeur_DROITE] = [True - False - False]
+Donc state en tout en exemple:
+state -> (True, False, False, False, True, False, False, False, True, False, False, False)
+state c est l'etat actuelle du serpent
+
+
+q_table = {(CLE): [VALEUR]}
+
+q_table = {
+    (True, False, False, False, True, False, ...): [-10, 5, 3, -2],
+    (False, True, False, False, False, True, ...): [3, -5, 7, 1],
+    ...
+}
+
+clé                                                    →  valeur
+(True, False, False, False, True, False, False,.....) → [-10, 5, 3, -2]
+
+
+À la fin après des milliers de sessions la Q-table ressemble à ça :
+{
+    (True, False, False, False, True, False, ...):  [-10, 5, 3, -2],
+    (False, True, False, False, False, True, ...):  [3, -5, 7, 1],
+    (False, False, True, False, False, False, ...): [2, 4, -8, 6],
+    ...
+}
+
+on sauvegarde dans les fichiers modèles :
+models/model_1.txt    → Q-table après 1 session
+models/model_10.txt   → Q-table après 10 sessions
+models/model_100.txt  → Q-table après 100 sessions
+
+la Q-table se remplit à chaque action :
+
+Il marche dans le vide → -0.01 → Q-table mise à jour
+Il mange une pomme verte → +1 → Q-table mise à jour
+Il mange une pomme rouge → -1 → Q-table mise à jour
+Il touche un mur → -10 → Q-table mise à jour
+
+la Q-table se remplit à chaque action :
+Il marche dans le vide → -0.01 → Q-table mise à jour
+Il mange une pomme verte → +1 → Q-table mise à jour
+Il mange une pomme rouge → -1 → Q-table mise à jour
+Il touche un mur → -10 → Q-table mise à jour
+
+Le serpent apprend de chaque action qu'il fait, pas seulement des événements importants !
+ C'est ça qui le rend intelligent avec le temps
+
+ ./snake -sessions 10 --> Ça veut dire 10 parties complètes
+
+ A chaque pas ou un deplacement de serpent la qtable est mis a jour,
+ Meme quand il ne se passe rien "Il marche dans le vide → -0.01 → Q-table mise à jour"
+
+Le reward sert à mettre à jour les valeurs dans la Q-table.
+
+La formule du Q-learning :
+nouvelle_valeur = ancienne_valeur + (reward + meilleure_valeur_future - ancienne_valeur)
+
+Le reward c'est le signal d'apprentissage — c'est grâce à lui que les valeurs dans 
+  la Q-table changent et que le serpent devient plus intelligent !
+Sans reward → pas d'apprentissage → le serpent reste stupide
+
+new_value = old_value + learning_rate × (reward + gamma × meilleure_valeur_future - old_value)
+
+learning_rate → à quelle vitesse le serpent apprend (ex: 0.1)
+gamma → à quel point il se souvient du futur (ex: 0.9)
+reward → ce qu'il a gagné ou perdu maintenant
+
+state c'est ce que le serpent voit (True, False, ....)
+[0, 0, 0, 0] -> c est les scores des 4 actions
+
+
+Dans la Q-table => self.table[state] = [0, 0, 0, 0] 
+---> Pour cette situation → voilà les scores des actions
+
+
+self.table[state] → on accède au dictionnaire à la clé state → on récupère [0, 0, 0, 0]
+self.table[state][action] → dans cette liste [0, 0, 0, 0] on accède à l'index action
+Par exemple si action = 0 (droite)
+
+self.table[state][action] =  self.table[state][0] = 2.5  
+# [0, 0, 0, 0] devient [2.5, 0, 0, 0]
+
+self.table[state] = [0, 0, 0, 0] <-- Ici ce sont les resultats avec la formule de Bellman qui est stocker

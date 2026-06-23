@@ -50,16 +50,17 @@ class Display:
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(self.screen, RED, rect)
 
-    def run(self):
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-            self.draw_grid()
-            self.draw_snake()
-            self.draw_green_apples()
-            self.draw_red_apple()
-            pygame.display.flip()
-            self.clock.tick(10)
-        pygame.quit()
+
+    def draw(self):
+        self.draw_grid()
+        self.draw_snake()
+        self.draw_green_apples()
+        self.draw_red_apple()
+        pygame.display.flip()
+
+    
+    def handle_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
