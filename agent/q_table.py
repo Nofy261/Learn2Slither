@@ -12,7 +12,6 @@ class QTable:
         #creer directement la cle - valeur ensemble
 
 
-
     def get_q_values(self, state):
         if state not in self.table:
             self.table[state] = [0, 0, 0, 0]
@@ -22,6 +21,3 @@ class QTable:
     def update(self, state, action, value):
         self.table[state][action] = value
     #ici value c'est le resultat obtenu avec la formule de Bellman  
-
-    
-     

@@ -27,6 +27,9 @@ class EpsilonGreedy:
             return values.index(max(values)) #on prend le +grand nbre dnas qtable et retourne sa position et non sa valeur
 
     def reduce_epsilon(self): 
+
+        #calcul qui permet de reduire la valeur de epsilon a la fin de chaque partie
         self.epsilon = self.epsilon * self.epsilon_decay
         if self.epsilon < self.epsilon_min:
             self.epsilon = self.epsilon_min
+    #epsilon dimininue au fur et a mesure que le serpent apprend

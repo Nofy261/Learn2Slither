@@ -24,3 +24,21 @@ class QLearning:
         best_future = max(future_values)
         new_value = old_value + self.learning_rate * (reward + self.gamma * best_future - old_value)
         q_table.update(state, action, new_value)
+
+    
+    #update reçoit :
+        #state — où le serpent était
+        #action — ce qu'il a fait
+        #reward — ce qu'il a gagné/perdu
+        #next_state — où il est maintenant
+
+        # formule de bellman 
+        #nouvelle_valeur = 2.1 + 0.1 × (1.45 - 2.1)
+        #2.1 → ce qu'on pensait que ce pas valait avant de le faire
+        #1.45 → ce que ce pas vaut vraiment (reward + gamma × best_future)
+        #(1.45 - 2.1) → l'erreur qu'on a faite, on s'était trompé de -0.65
+        #0.1 → on ne corrige que 10% de cette erreur, petit à petit
+        #nouvelle_valeur → la valeur corrigée qu'on stocke dans la Q-table
+        #En une phrase :
+        #"Je pensais que ce pas valait 2.1, en réalité il vaut 1.45, je me suis trompé de -0.65,"
+        #"donc je corrige 10% de cette erreur et je mets à jour ma Q-table avec 2.035."

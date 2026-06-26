@@ -152,7 +152,7 @@ class Game:
             if (x, y) == self.board.red_apple:
                 return "R"
 
-            return "0"
+            #return "0"
         
 
     def encode_direction(self, cell):

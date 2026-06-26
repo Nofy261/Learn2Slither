@@ -770,3 +770,59 @@ Si on corriges trop fort le volant → on zigzagues
 Si on corriges doucement → on restes stable
 On utilise 0.1 — bon équilibre.
 
+-------
+
+Formule de Bellman expliqué:
+"Ce que je pensais de cette action" + "ce que j'ai vraiment gagné" + "ce que je pourrais gagner ensuite"
+
+La formule de Bellman répond à cette question : "Combien vaut cette action dans cette situation ?"
+------
+
+(reward + gamma × best_future - old_value) en mot simple
+C'est l'écart entre ce qu'on espérait et ce qu'on a vraiment eu.
+
+old_value → ce qu'on pensait que ce pas valait avant de le faire
+reward + gamma × best_future → ce que ce pas vaut vraiment (ce qu'on a gagné + ce qu'on pourra gagner ensuite)
+La soustraction → l'erreur : "j'avais tort de combien ?"
+
+Exemple :
+old_value = 0.0    # on pensait que UP ne valait rien
+reward + gamma × best_future = 0.72   # en réalité ça valait 0.72
+
+écart = 0.72 - 0.0 = 0.72  # on s'était trompé de 0.72
+Et learning rate contrôle à quelle vitesse on corrige cette erreur :
+
+nouvelle_valeur = 0.0 + 0.1 × 0.72 = 0.072
+On ne corrige pas tout d'un coup (sinon un seul mauvais coup effacerait tout l'apprentissage).
+-------
+
+gamma pondère l'importance du futur (0 = aveugle, 1 = futur compte autant que maintenant)
+reward + gamma × best_future = ce que le pas vaut vraiment
+- old_value = l'erreur qu'on a faite, et lr contrôle à quelle vitesse on la corrige
+----------------
+
+Learning rate => En résumé :
+
+lr contrôle la fraction de l'erreur qu'on corrige à chaque pas
+Si old_value trop haute → la valeur descend
+Si old_value trop basse → la valeur monte
+Avec le temps la valeur converge vers la vraie valeur
+DONC learning_rate sert a corriger l'erreur petit a petit
+----------
+
+FORMULE DE BELLMAN: explication
+
+nouvelle_valeur = 2.1 + 0.1 × (1.45 - 2.1)
+2.1 → ce qu'on pensait que ce pas valait avant de le faire
+1.45 → ce que ce pas vaut vraiment (reward + gamma × best_future)
+(1.45 - 2.1) → l'erreur qu'on a faite, on s'était trompé de -0.65
+0.1 → on ne corrige que 10% de cette erreur, petit à petit
+nouvelle_valeur → la valeur corrigée qu'on stocke dans la Q-table
+En une seule phrase :
+
+"Je pensais que ce pas valait 2.1, en réalité il vaut 1.45, je me suis trompé de -0.65,
+donc je corrige 10% de cette erreur et je mets à jour ma Q-table avec 2.035."
+----------------
+
+old_value = q_table.get_q_values(state)[action]
+↑score de Right     ↑ retourne la liste          ↑ on prend l'index directement
