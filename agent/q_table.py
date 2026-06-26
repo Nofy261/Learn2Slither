@@ -8,7 +8,7 @@
 
 class QTable:
     def __init__(self):
-        self.table = {} #dictionnaire de nom table vide au debut
+        self.table = {} #dictionnaire vide au debut
         #creer directement la cle - valeur ensemble
 
 

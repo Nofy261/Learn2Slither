@@ -690,3 +690,83 @@ self.table[state][action] =  self.table[state][0] = 2.5
 # [0, 0, 0, 0] devient [2.5, 0, 0, 0]
 
 self.table[state] = [0, 0, 0, 0] <-- Ici ce sont les resultats avec la formule de Bellman qui est stocker
+--------------------
+
+Explication du code: q_table.py:
+class QTable:
+    def __init__(self):
+        self.table = {}
+self.table est un dictionnaire vide. C'est la mémoire de l'IA.
+
+clé = un état du snake (un tuple de True/False)
+valeur = une liste de 4 scores, un par action
+
+{
+  (True, False, False, ...): [0, 0, 0, 0]
+   ↑ état                     ↑ scores des 4 actions
+}
+
+------
+
+def get_q_values(self, state):
+    if state not in self.table:
+        self.table[state] = [0, 0, 0, 0]
+    return self.table[state]
+Si le snake voit cet état pour la première fois → on crée une entrée avec [0, 0, 0, 0]
+Sinon → on retourne ce qu'on a déjà appris
+
+------
+
+def update(self, state, action, value):
+    self.table[state][action] = value
+action = un index (0=droite, 1=gauche, 2=haut, 3=bas)
+value = le résultat de la formule de Bellman
+On remplace l'ancienne valeur par la nouvelle
+
+-----------
+
+Au début, epsilon est grand, donc le snake explore beaucoup car il ne connaît rien encore.
+Au fur et à mesure des sessions, on diminue epsilon, donc le snake exploite 
+de plus en plus ce qu'il a appris. C'est l'algorithme epsilon-greedy.
+------
+
+epsilon_decay — c'est quoi ?
+C'est le multiplicateur qu'on applique à epsilon après chaque session
+pour le diminuer progressivement.
+C'est la vitesse à laquelle epsilon diminue après chaque session.
+
+La formule dans decay() sera :
+self.epsilon = self.epsilon * self.epsilon_decay
+
+Exemple  avec 0.995
+Session 1  →  epsilon = 0.9
+Session 2  →  epsilon = 0.9 × 0.995 = 0.8955
+Session 3  →  epsilon = 0.8955 × 0.995 = 0.8910
+Session 4  →  epsilon = 0.8910 × 0.995 = 0.8865
+...
+Session 100 → epsilon ≈ 0.44
+Session 500 → epsilon ≈ 0.08  (< 0.1 → on reste à 0.1 minimum)
+--------
+
+reduce_epsilon():
+Session 1  →  snake joue  →  game over  →  decay()  →  epsilon = 0.9 × 0.995 = 0.8955
+Session 2  →  snake joue  →  game over  →  decay()  →  epsilon = 0.8955 × 0.995 = 0.8910
+Session 3  →  snake joue  →  game over  →  decay()  →  epsilon = 0.8910 × 0.995 = 0.8865
+...
+quand la partie est terminée -> epsilon change.
+--------
+
+gamma = 0.9 signifie : "Le futur compte, mais moins que maintenant"
+
+gamma = 0   →  le snake ne pense qu'au présent
+gamma = 1   →  le futur compte autant que le présent
+gamma = 0.9 →  bon équilibre
+--------
+
+learning_rate grand (ex: 0.9)  →  apprend vite mais instable
+learning_rate petit (ex: 0.1)  →  apprend lentement mais stable et précis
+C'est comme apprendre à conduire :
+Si on corriges trop fort le volant → on zigzagues
+Si on corriges doucement → on restes stable
+On utilise 0.1 — bon équilibre.
+
