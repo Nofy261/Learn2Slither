@@ -63,6 +63,7 @@ class Game:
         self.board = Board()
         self.game_over = False  # etat de la partie est fini ou pas
         self.reward = 0
+        self.reset() # AJOUT POUR TEST
 
     def reset(self):
 
@@ -152,7 +153,7 @@ class Game:
             if (x, y) == self.board.red_apple:
                 return "R"
 
-            #return "0"
+            #return "0" # TEST A REMETRRE
         
 
     def encode_direction(self, cell):

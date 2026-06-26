@@ -11,7 +11,7 @@ def main():
     display = Display(game.board)
 
 
-    for _ in range(100):
+    for _ in range(20):
         game.reset()
         state = game.get_state()
 
@@ -20,6 +20,8 @@ def main():
             next_state, reward, game_over = game.step(action)
             q_agent.learn(state, action, reward, next_state)
             display.draw()
+            display.handle_events()
+            display.clock.tick(10)
             state = next_state
         q_agent.end_session()
 
@@ -30,5 +32,13 @@ def main():
 if __name__ == "__main__":
     main()
 
+#Donc saver.py doit écrire ce dictionnaire dans un fichier et pouvoir le relire.
+
+#En Python on utilise json pour ça — ça convertit un dictionnaire en texte lisible.
+
+#Deux fonctions à créer :
+
+#save(q_table, filename) → écrit la Q-table dans un fichier
+#load(filename) → lit le fichier et retourne la Q-table
 
 
