@@ -64,3 +64,13 @@ class Display:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
+    def wait_for_keypress(self):
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    waiting = False
+                elif event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()

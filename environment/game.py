@@ -204,6 +204,39 @@ class Game:
 
 
 
+    def get_vision_line(self, dx, dy):
+        head_x, head_y = self.board.snake[0]
+        x, y = head_x, head_y
+        vision_line = []
+
+        while True:
+            x += dx
+            y += dy
+
+            if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
+                vision_line.append("W")
+                break
+            if (x, y) in self.board.snake:
+                vision_line.append("S")
+                break
+            if (x, y) in self.board.green_apples:
+                vision_line.append("G")
+                break
+            if (x, y) == self.board.red_apple:
+                vision_line.append("R")
+                break
+            else:
+                vision_line.append("0")
+        return vision_line
+
+
+
+
+
+
+
+
+
    
 #action = mouvement(cad le snkae va a gauche ou a droite ou en haut en bas)
 #step() applique une action dans le jeu, met à jour l’état du monde,
