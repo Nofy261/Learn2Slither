@@ -195,8 +195,10 @@ class Game:
 
         self.move_snake(action)
         #self.check_collision()
-        self.handle_apples()
-        self.state = self.get_state()
+        if not self.game_over:
+            self.handle_apples()
+        if not self.game_over:
+            self.state = self.get_state()
         return self.state, self.reward, self.game_over
 
 

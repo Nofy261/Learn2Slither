@@ -37,9 +37,12 @@ def load(filename) -> dict:
             for key, value in data_text.items():
                 new_key = ast.literal_eval(key)
                 result[new_key] = value
-    except (FileNotFoundError, PermissionError):
-        print(f"Error loading {filename}")
+    except FileNotFoundError:
+        print(f"Error: file {filename} not found")
         return {} 
+    except PermissionError:
+        print(f"Error: Permission denied")
+        return {}
     return result
     
 

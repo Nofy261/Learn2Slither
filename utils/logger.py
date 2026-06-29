@@ -24,5 +24,3 @@ def print_state(game, action):
     print()
     print(ACTIONS.get(action, str(action)))
 
-
-    #!! A REFAIRE CAR BUGG 
