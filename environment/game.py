@@ -17,15 +17,6 @@
 
 
 
-#les regles, collisions, rewards
-
-# appeler snake + board ensemble
-# aplliquer une action
-# calcul reward , detecter game over
-
-#reset partie
-#step action
-#return : next_state, reward, done
 
 # ce fichier game.py gere :
 #lancer une partie
@@ -73,6 +64,26 @@ class Game:
         self.game_over = False
         self.reward = 0
 
+
+    def check_collision(self):
+        head = self.board.snake[0]
+        x, y = head
+
+        #verif collison avec le mur
+        if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
+            print("COLLISION MUR")
+            self.game_over = True
+            self.reward = -10
+            return
+        
+        #Vérif collision avec le corps du snake
+        if head in self.board.snake[1:]:
+            print("COLLISION CORPS")
+            self.game_over = True
+            self.reward = -10
+            return
+        
+
     def move_snake(self, action):
         head_x, head_y = self.board.snake[0]
         directions = {
@@ -85,25 +96,11 @@ class Game:
         dx, dy = directions[action]
         new_head = (head_x + dx, head_y + dy)
         self.board.snake.insert(0, new_head)
+        self.check_collision()
         self.board.snake.pop()
 
 
 
-    def check_collision(self):
-        head = self.board.snake[0]
-        x, y = head
-
-        #verif collison avec le mur
-        if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
-            self.game_over = True
-            self.reward = -10
-            return
-        
-        #Vérif collision avec le corps du snake
-        if head in self.board.snake[1:]:
-            self.game_over = True
-            self.reward = -10
-            return
 
 
     def handle_apples(self):
@@ -197,7 +194,7 @@ class Game:
         self.reward = 0
 
         self.move_snake(action)
-        self.check_collision()
+        #self.check_collision()
         self.handle_apples()
         self.state = self.get_state()
         return self.state, self.reward, self.game_over
@@ -218,13 +215,13 @@ class Game:
                 break
             if (x, y) in self.board.snake:
                 vision_line.append("S")
-                break
-            if (x, y) in self.board.green_apples:
+                #break
+            elif (x, y) in self.board.green_apples:
                 vision_line.append("G")
-                break
-            if (x, y) == self.board.red_apple:
+                #break
+            elif (x, y) == self.board.red_apple:
                 vision_line.append("R")
-                break
+                #break
             else:
                 vision_line.append("0")
         return vision_line

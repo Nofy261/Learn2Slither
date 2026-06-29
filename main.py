@@ -34,8 +34,9 @@ def main():
     for session in range(args.sessions):
         game.reset()
         state = game.get_state()
+        game_over = False
 
-        while not game.game_over:
+        while not game_over:
             action = q_agent.choose_action(state)
             print_state(game, action)
             next_state, reward, game_over = game.step(action)
@@ -51,6 +52,7 @@ def main():
                     display.clock.tick(10)
             state = next_state
 
+        print(f"Partie {session + 1} terminée ")
         q_agent.end_session()
 
         if session == 0:
@@ -71,7 +73,7 @@ if __name__ == "__main__":
 
 
 
-BUGG A TESTER : python main.py -sessions 2 -visual on -step-by-step
+#BUGG A TESTER : python main.py -sessions 2 -visual on -step-by-step
 
 
 #./snake -sessions 10 -save models/10sess.txt -visual off

@@ -2,6 +2,7 @@
 #La vision — ce que le snake voit dans les 4 directions avant de choisir
 #L'action — la direction qu'il a choisie
 
+
 ACTIONS = {0: "RIGHT", 1: "LEFT", 2: "UP", 3: "DOWN"}
 
 
@@ -24,4 +25,4 @@ def print_state(game, action):
     print(ACTIONS.get(action, str(action)))
 
 
-    !! A REFAIRE CAR BUGG 
+    #!! A REFAIRE CAR BUGG 
