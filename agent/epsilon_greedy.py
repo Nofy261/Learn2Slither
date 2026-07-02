@@ -11,25 +11,18 @@ import random
 
 class EpsilonGreedy:
     def __init__(self):
-        self.epsilon = 0.9
-        self.epsilon_min = 0.1
-        self.epsilon_decay = 0.995
+        self.epsilon = 1.0
 
     def choose_action(self, state, q_table):
 
         """ retourne entre 0 et 3 cad l'action choisit gauche droite etc..."""
 
-        rand = random.random() #  génère un nombre entre 0 et 1
-        if rand < self.epsilon: #est ce que le nbre est tombé ds la zone d exploration
-            return random.randint(0, 3) #choisit une action au hasard 
+        rand = random.random()
+        if rand < self.epsilon:
+            return random.randint(0, 3)
         else:
             values = q_table.get_q_values(state)
-            return values.index(max(values)) #on prend le +grand nbre dnas qtable et retourne sa position et non sa valeur
+            return values.index(max(values))
 
-    def reduce_epsilon(self): 
-
-        #calcul qui permet de reduire la valeur de epsilon a la fin de chaque partie
-        self.epsilon = self.epsilon * self.epsilon_decay
-        if self.epsilon < self.epsilon_min:
-            self.epsilon = self.epsilon_min
-    #epsilon dimininue au fur et a mesure que le serpent apprend
+    def reduce_epsilon(self, session, sessions):
+        self.epsilon = max(0.05, 1.0 - (session / sessions) * 3)

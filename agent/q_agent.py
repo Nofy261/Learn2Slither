@@ -23,10 +23,10 @@ class QAgent:
         return action
 
 
-    def learn(self, state, action, reward, next_state) -> None:
-        self.q_learning.update(self.q_table, state, action , reward, next_state)
+    def learn(self, state, action, reward, next_state, game_over) -> None:
+        self.q_learning.update(self.q_table, state, action , reward, next_state, game_over)
 
     
-    def end_session(self) -> None:
-        self.epsilon_greedy.reduce_epsilon()
+    def end_session(self, session, sessions) -> None:
+        self.epsilon_greedy.reduce_epsilon(session, sessions)
         

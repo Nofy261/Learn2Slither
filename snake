@@ -14,7 +14,6 @@ def start():
     game = Game()  
     q_agent = QAgent()
     
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-sessions", type=int, default=100)
@@ -42,20 +41,19 @@ def start():
     if args.dontlearn:
         q_agent.epsilon_greedy.epsilon = 0
         
-
     for session in range(args.sessions):
         game.reset()
         state = game.get_state()
         game_over = False
         steps = 0
 
-        while not game_over:
+        while not game_over and steps < 300:
             steps += 1
             action = q_agent.choose_action(state)
             print_state(game, action)
             next_state, reward, game_over = game.step(action)
             if not args.dontlearn:
-                q_agent.learn(state, action, reward, next_state)
+                q_agent.learn(state, action, reward, next_state, game_over)
 
             if args.visual == "on":
                 display.draw()
@@ -68,10 +66,7 @@ def start():
 
         print(f"Game over, max length = {len(game.board.snake)}, max duration = {steps}")
 
-        #print(f"Partie {session + 1} terminée ") #test
-        q_agent.end_session()
-
-
+        q_agent.end_session(session, args.sessions)
 
         if args.save:
             if session == 0:
@@ -92,6 +87,9 @@ if __name__ == "__main__":
     start()
 
 
+
+
+#./snake -sessions 20 -load models/30k.txt -dontlearn -visual off 2>&1 | grep "Game over" 
 
 
 #./snake -sessions 10 -save models/10sess.txt -visual off

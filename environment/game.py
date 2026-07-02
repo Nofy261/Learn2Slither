@@ -63,27 +63,25 @@ class Game:
         self.board.reset()
         self.game_over = False
         self.reward = 0
+        self.state = self.get_state()
 
-
+    #A REVOIR
     def check_collision(self):
         head = self.board.snake[0]
         x, y = head
 
-        #verif collison avec le mur
         if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
-            print("COLLISION MUR")
             self.game_over = True
-            self.reward = -10
+            self.reward = -100
             return
-        
-        #Vérif collision avec le corps du snake
+
         if head in self.board.snake[1:]:
-            print("COLLISION CORPS")
             self.game_over = True
-            self.reward = -10
+            self.reward = -100
             return
         
 
+    #A REVOIR
     def move_snake(self, action):
         head_x, head_y = self.board.snake[0]
         directions = {
@@ -115,7 +113,7 @@ class Game:
             #on enleve la pomme mangé
             self.board.green_apples.remove(head)
             self.board.snake.append(self.board.snake[-1])
-            self.reward = 1
+            self.reward = 10
             self.board.spawn_green_apples()
             
 
@@ -124,7 +122,7 @@ class Game:
             self.board.red_apple = None
             if len(self.board.snake) > 0:
                 self.board.snake.pop()
-            self.reward = -1
+            self.reward = -10
             
             if len(self.board.snake) == 0:
                 self.game_over = True
@@ -132,25 +130,31 @@ class Game:
             
             self.board.spawn_red_apple()
     
-
+    #A REVOIR
     def look_direction(self, dx, dy):
         head_x, head_y = self.board.snake[0]
-        x, y = head_x, head_y
+        x, y = head_x + dx, head_y + dy
+
+        if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
+            return "W"
+        if (x, y) in self.board.snake:
+            return "S"
+        if (x, y) in self.board.green_apples:
+            return "G"
+        if (x, y) == self.board.red_apple:
+            return "R"
 
         while True:
             x += dx
             y += dy
-
             if x < 0 or x >= self.board.width or y < 0 or y >= self.board.height:
-                return "W"
-            if (x, y) in self.board.snake:
-                return "S"
+                break
             if (x, y) in self.board.green_apples:
                 return "G"
             if (x, y) == self.board.red_apple:
                 return "R"
 
-            #return "0" # TEST A REMETRRE
+        return "0"
         
 
     def encode_direction(self, cell):
@@ -197,6 +201,8 @@ class Game:
         #self.check_collision()
         if not self.game_over:
             self.handle_apples()
+        if not self.game_over and self.reward == 0:
+            self.reward = -3
         if not self.game_over:
             self.state = self.get_state()
         return self.state, self.reward, self.game_over

@@ -18,10 +18,13 @@ class QLearning:
         self.learning_rate = 0.1
         self.gamma = 0.9
 
-    def update(self, q_table, state, action, reward, next_state):
+    def update(self, q_table, state, action, reward, next_state, game_over):
         old_value = q_table.get_q_values(state)[action]
-        future_values = q_table.get_q_values(next_state)
-        best_future = max(future_values)
+        if game_over:
+            best_future = 0
+        else:
+            future_values = q_table.get_q_values(next_state)
+            best_future = max(future_values)
         new_value = old_value + self.learning_rate * (reward + self.gamma * best_future - old_value)
         q_table.update(state, action, new_value)
 
