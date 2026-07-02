@@ -26,3 +26,4 @@ class EpsilonGreedy:
 
     def reduce_epsilon(self, session, sessions):
         self.epsilon = max(0.05, 1.0 - (session / sessions) * 3)
+        #self.epsilon = max(0.05, 1.0 - (session / sessions))

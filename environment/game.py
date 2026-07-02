@@ -75,7 +75,7 @@ class Game:
             self.reward = -100
             return
 
-        if head in self.board.snake[1:]:
+        if head in self.board.snake[1:]: #[1:-1]
             self.game_over = True
             self.reward = -100
             return
@@ -131,7 +131,7 @@ class Game:
             self.board.spawn_red_apple()
     
     #A REVOIR
-    def look_direction(self, dx, dy):
+    def look_direction(self, dx: int, dy: int) -> str:
         head_x, head_y = self.board.snake[0]
         x, y = head_x + dx, head_y + dy
 
@@ -157,7 +157,7 @@ class Game:
         return "0"
         
 
-    def encode_direction(self, cell):
+    def encode_direction(self, cell: str) -> Tuple[bool, bool, bool]:
 
         """
         Transforme la vision brute d’une direction en informations simples pour l’agent RL.
@@ -178,7 +178,7 @@ class Game:
 
 
 
-    def get_state(self):
+    def get_state(self) -> Tuple[bool, ...]:
 
         left = self.look_direction(-1, 0)
         right = self.look_direction(1, 0)
@@ -193,7 +193,7 @@ class Game:
         return left_state + right_state + up_state + down_state
 
 
-    def step(self, action):
+    def step(self, action: int) -> Tuple[Tuple[bool, ...], float, bool]:
 
         self.reward = 0
 
@@ -209,7 +209,7 @@ class Game:
 
 
 
-    def get_vision_line(self, dx, dy):
+    def get_vision_line(self, dx: int, dy:int) -> List[str]:
         head_x, head_y = self.board.snake[0]
         x, y = head_x, head_y
         vision_line = []

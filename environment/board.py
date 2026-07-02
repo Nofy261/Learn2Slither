@@ -21,7 +21,7 @@ import random
 
 class Board:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.width = 10 #largeur (x)
         self.height = 10 #longueur(y)
         self.grid = [ #list de ligne
@@ -33,7 +33,7 @@ class Board:
         self.red_apple = None
 
 
-    def create_snake(self):
+    def create_snake(self) -> None:
 
         """
             Crée un serpent de 3 cases placé aléatoirement sur la grille.
@@ -85,7 +85,7 @@ class Board:
     #(x,y) = tuple = paire de valeur
 
 
-    def spawn_green_apples(self):
+    def spawn_green_apples(self) -> None:
 
         """ 
             Génère 2 pommes vertes à des positions aléatoires libres.
@@ -110,7 +110,7 @@ class Board:
                     self.green_apples.append((x, y))
 
 
-    def spawn_red_apple(self):
+    def spawn_red_apple(self) -> None:
 
         """
         Génère 1 pomme rouge à une position aléatoire libre.
@@ -126,7 +126,7 @@ class Board:
                 break
 
 
-    def reset(self):
+    def reset(self) -> None:
 
         """ 
         Remet le plateau à zéro et replace tous les éléments.
@@ -148,7 +148,7 @@ class Board:
 
 #update_grid synchronise la représentation visuelle avec l’état réel du jeu
 
-    def update_grid(self):
+    def update_grid(self) -> None:
 
         """ 
         Reconstruit la grille à partir des positions actuelles
