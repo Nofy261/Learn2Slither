@@ -846,3 +846,13 @@ data["bonjour"] = 42
 bonjour = cle 
 42 = valeur donc data = {"bonjour" : 42}
 
+-----------------------
+Game.py -> encode_direction():      """
+        Encode une liste complète de vision en 3 booléens : (danger, green, red).
+        - danger : True si mur ou corps immédiatement (première case)
+        - green : True si pomme verte visible AVANT tout obstacle
+        - red : True si pomme rouge visible AVANT tout obstacle
+        """
+
+watch -n 1 flake8 environment/game.py
+#./snake -sessions 20 -load models/30k.txt -dontlearn -visual off 2>&1 | grep "Game over" 

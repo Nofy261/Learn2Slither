@@ -1,8 +1,3 @@
-#mode step-by-step
-# vitesse , pause
-
-#les constantes
-
 import pygame
 from environment.board import Board
 

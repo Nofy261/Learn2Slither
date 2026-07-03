@@ -66,15 +66,9 @@ def start():
 
         print(f"Game over, max length = {len(game.board.snake)}, max duration = {steps}")
 
-        q_agent.end_session(session, args.sessions)
+        if not args.dontlearn:
+            q_agent.end_session(session, args.sessions)
 
-        if args.save:
-            if session == 0:
-                save(q_agent.q_table, "models/model_1.txt")
-            if session == 9:
-                save(q_agent.q_table, "models/model_10.txt")
-            if session == 99:
-                save(q_agent.q_table, "models/model_100.txt")
 
     if args.save:
         print(f"Save learning state in {args.save}")
@@ -82,14 +76,9 @@ def start():
 
 
 
-
 if __name__ == "__main__":
     start()
 
-
-
-
-#./snake -sessions 20 -load models/30k.txt -dontlearn -visual off 2>&1 | grep "Game over" 
 
 
 #./snake -sessions 10 -save models/10sess.txt -visual off
