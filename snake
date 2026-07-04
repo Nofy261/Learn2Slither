@@ -11,7 +11,7 @@ from utils.logger import print_state
 
 def start():
 
-    game = Game()  
+    game = Game()
     q_agent = QAgent()
     
     parser = argparse.ArgumentParser()
@@ -37,6 +37,7 @@ def start():
         if not q_agent.q_table.table:
             print(f"Error: failed to load {args.load}")
             exit(1)
+        print(f"Load trained model from {args.load}")
 
     if args.dontlearn:
         q_agent.epsilon_greedy.epsilon = 0
