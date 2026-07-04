@@ -1,19 +1,12 @@
-
-# decide parfois random (exploration) 
-# parfois  exploitation 
-# epsilon = 0.1  →  10% exploration / 90% exploitation
-# epsilon = 0.9  →  90% exploration / 10% exploitation
-
-# Au début du training → epsilon élevé (beaucoup d'exploration)
-# Avec le temps → epsilon diminue (de plus en plus d'exploitation)
-
+from typing import Tuple
+from agent.q_table import QTable
 import random
 
 class EpsilonGreedy:
-    def __init__(self):
+    def __init__(self) -> None:
         self.epsilon = 1.0
 
-    def choose_action(self, state, q_table):
+    def choose_action(self, state: Tuple[bool, ...], q_table: QTable) -> int:
 
         """ retourne entre 0 et 3 cad l'action choisit gauche droite etc..."""
 
@@ -24,5 +17,5 @@ class EpsilonGreedy:
             values = q_table.get_q_values(state)
             return values.index(max(values))
 
-    def reduce_epsilon(self, session, sessions):
+    def reduce_epsilon(self, session: int, sessions: int) -> None:
         self.epsilon = max(0.05, 1.0 - (session / sessions) * 3)

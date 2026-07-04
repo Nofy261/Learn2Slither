@@ -1,12 +1,9 @@
-#affiche dans le terminal :
-#La vision — ce que le snake voit dans les 4 directions avant de choisir
-#L'action — la direction qu'il a choisie
-
+from environment.game import Game
 
 ACTIONS = {0: "RIGHT", 1: "LEFT", 2: "UP", 3: "DOWN"}
 
 
-def print_state(game, action):
+def print_state(game: Game, action: int) -> None:
     up = list(reversed(game.get_vision_line(0, -1)))
     down = game.get_vision_line(0, 1)
     left = list(reversed(game.get_vision_line(-1, 0)))
@@ -23,4 +20,3 @@ def print_state(game, action):
 
     print()
     print(ACTIONS.get(action, str(action)))
-

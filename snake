@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from visualization.display import Display
-from environment.board import Board
 from environment.game import Game
 from agent.q_agent import QAgent
 import argparse
@@ -9,83 +8,151 @@ from utils.saver import load, save
 from utils.logger import print_state
 
 
-def start():
+# def start():
 
-    game = Game()
-    q_agent = QAgent()
-    
+#     game = Game()
+#     q_agent = QAgent()
+
+#     parser = argparse.ArgumentParser()
+
+#     parser.add_argument("-sessions", type=int, default=100)
+#     parser.add_argument("-save", type=str)
+#     parser.add_argument("-load", type=str)
+#     parser.add_argument("-visual", type=str, default="on")
+#     parser.add_argument("-dontlearn", action="store_true")
+#     parser.add_argument("-step-by-step", action="store_true")
+
+#     args = parser.parse_args()
+
+#     if args.visual not in ("on", "off"):
+#         print("Error: -visual must be 'on' or 'off'")
+#         exit(1)
+
+#     if args.visual == "on":
+#         display = Display(game.board)
+
+#     if args.load is None and args.save is None:
+#         print("Error: -save or -load is required")
+#         exit(1)
+
+#     if args.load:
+#         q_agent.q_table.table = load(args.load)
+#         if not q_agent.q_table.table:
+#             exit(1)
+#         print(f"Load trained model from {args.load}")
+
+#     if args.dontlearn:
+#         q_agent.epsilon_greedy.epsilon = 0
+
+#     for session in range(args.sessions):
+#         game.reset()
+#         state = game.get_state()
+#         game_over = False
+#         steps = 0
+
+#         while not game_over and steps < 300:
+#             steps += 1
+#             action = q_agent.choose_action(state)
+#             print_state(game, action)
+#             next_state, reward, game_over = game.step(action)
+#             if not args.dontlearn:
+#                 q_agent.learn(state, action, reward, next_state, game_over)
+
+#             if args.visual == "on":
+#                 display.draw()
+#                 display.handle_events()
+#                 if args.step_by_step:
+#                     display.wait_for_keypress()
+#                 else:
+#                     display.clock.tick(10)
+#             state = next_state
+
+#         print(f"Game over, max length = {len(game.board.snake)},"
+#               f" max duration = {steps}")
+
+#         if not args.dontlearn:
+#             q_agent.end_session(session, args.sessions)
+
+#     if args.save:
+#         print(f"Save learning state in {args.save}")
+#         save(q_agent.q_table, args.save)
+
+
+
+def parse_args():
     parser = argparse.ArgumentParser()
-
     parser.add_argument("-sessions", type=int, default=100)
     parser.add_argument("-save", type=str)
     parser.add_argument("-load", type=str)
     parser.add_argument("-visual", type=str, default="on")
     parser.add_argument("-dontlearn", action="store_true")
     parser.add_argument("-step-by-step", action="store_true")
-
     args = parser.parse_args()
 
-    if args.visual == "on":
-        display = Display(game.board)
+    if args.visual not in ("on", "off"):
+        print("Error: -visual must be 'on' or 'off'")
+        exit(1)
 
     if args.load is None and args.save is None:
         print("Error: -save or -load is required")
         exit(1)
 
+    return args
+
+def run_session(game, q_agent, args, display):
+    game.reset()
+    state = game.get_state()
+    game_over = False
+    steps = 0
+
+    while not game_over and steps < 300:
+        steps += 1
+        action = q_agent.choose_action(state)
+        print_state(game, action)
+        next_state, reward, game_over = game.step(action)
+        if not args.dontlearn:
+            q_agent.learn(state, action, reward, next_state, game_over)
+
+        if args.visual == "on":
+            display.draw()
+            display.handle_events()
+            if args.step_by_step:
+                display.wait_for_keypress()
+            else:
+                display.clock.tick(10)
+        state = next_state
+
+    print(f"Game over, max length = {len(game.board.snake)},"
+          f" max duration = {steps}")
+    
+
+def start():
+    game = Game()
+    q_agent = QAgent()
+    args = parse_args()
+
+    display = None
+    if args.visual == "on":
+        display = Display(game.board)
+
     if args.load:
         q_agent.q_table.table = load(args.load)
         if not q_agent.q_table.table:
-            print(f"Error: failed to load {args.load}")
             exit(1)
         print(f"Load trained model from {args.load}")
 
     if args.dontlearn:
         q_agent.epsilon_greedy.epsilon = 0
-        
+
     for session in range(args.sessions):
-        game.reset()
-        state = game.get_state()
-        game_over = False
-        steps = 0
-
-        while not game_over and steps < 300:
-            steps += 1
-            action = q_agent.choose_action(state)
-            print_state(game, action)
-            next_state, reward, game_over = game.step(action)
-            if not args.dontlearn:
-                q_agent.learn(state, action, reward, next_state, game_over)
-
-            if args.visual == "on":
-                display.draw()
-                display.handle_events()
-                if args.step_by_step:
-                    display.wait_for_keypress()
-                else:
-                    display.clock.tick(10)
-            state = next_state
-
-        print(f"Game over, max length = {len(game.board.snake)}, max duration = {steps}")
-
+        run_session(game, q_agent, args, display)
         if not args.dontlearn:
             q_agent.end_session(session, args.sessions)
-
 
     if args.save:
         print(f"Save learning state in {args.save}")
         save(q_agent.q_table, args.save)
 
 
-
 if __name__ == "__main__":
     start()
-
-
-
-#./snake -sessions 10 -save models/10sess.txt -visual off
-#./snake -visual on -load models/100sess.txt -sessions 10 -dontlearn -step-by-step
-#Load trained model from models/100sess.txt
-#./snake -visual on -load models/1000sess.txt
-
-
-#-sessions, -save, -load, -visual, -dontlearn, -step-by-step.
