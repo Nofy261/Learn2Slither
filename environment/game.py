@@ -11,13 +11,12 @@ class Game:
         self.reset()
 
     def reset(self) -> None:
-        """ relance une nouvelle partie propre """
         self.board.reset()
         self.game_over = False
         self.reward = 0
         self.state = self.get_state()
 
-    def check_collision(self) -> None:
+    def check_collision(self, growing: bool) -> None:
         head = self.board.snake[0]
         x, y = head
 
@@ -26,7 +25,12 @@ class Game:
             self.reward = -100
             return
 
-        if head in self.board.snake[1:-1]:
+        if growing:
+            body = self.board.snake[1:]
+        else:
+            body = self.board.snake[1:-1]
+
+        if head in body:
             self.game_over = True
             self.reward = -100
             return
@@ -34,34 +38,29 @@ class Game:
     def move_snake(self, action: int) -> None:
         head_x, head_y = self.board.snake[0]
         directions = {
-            0: (1, 0),   # droite
-            1: (-1, 0),  # gauche
-            2: (0, -1),  # haut
-            3: (0, 1)    # bas
+            0: (1, 0),
+            1: (-1, 0),
+            2: (0, -1),
+            3: (0, 1)
         }
 
         dx, dy = directions[action]
         new_head = (head_x + dx, head_y + dy)
         self.board.snake.insert(0, new_head)
-        self.check_collision()
-        self.board.snake.pop()
+        growing = new_head in self.board.green_apples
+        self.check_collision(growing)
+        if not growing:
+            self.board.snake.pop()
 
     def handle_apples(self) -> None:
-        """
-        Verifie si la tete du snake est sur une pomme.
-        Gestion des consequences des collisions avec les objets.
-        """
         head = self.board.snake[0]
 
         if head in self.board.green_apples:
-            # on enleve la pomme mangee
             self.board.green_apples.remove(head)
-            self.board.snake.append(self.board.snake[-1])
             self.reward = 10
             self.board.spawn_green_apples()
 
         elif head == self.board.red_apple:
-            # supprimer pomme rouge
             self.board.red_apple = None
             if len(self.board.snake) > 0:
                 self.board.snake.pop()
