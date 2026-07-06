@@ -955,3 +955,26 @@ class QTable:
 
 
 #-sessions, -save, -load, -visual, -dontlearn, -step-by-step.
+------------------
+
+parse_args() dans snake — c'est la première chose qui s'exécute
+start() dans snake — orchestre tout
+run_session() dans snake — une partie
+Game.__init__ et reset() — initialisation du jeu
+Board — le plateau
+get_state() / look_direction() / encode_direction() — la vision
+step() — un tour de jeu
+QAgent.choose_action() — choisir une action
+EpsilonGreedy.choose_action() — exploration vs exploitation
+QLearning.update() — apprendre (formule de Bellman)
+QTable.get_q_values() / update() — la mémoire
+
+---------------------
+
+get_state() dans game.py — montre que l'état est construit uniquement depuis la tête, dans 4 directions
+look_direction() dans game.py — montre que le scan part de la tête
+encode_direction() dans game.py — montre que la vision est réduite à 3 booléens par direction
+choose_action() dans q_agent.py — montre que l'agent reçoit uniquement le state (les 12 booléens), rien d'autre
+
+
+

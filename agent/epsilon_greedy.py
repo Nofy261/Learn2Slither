@@ -2,6 +2,7 @@ from typing import Tuple
 from agent.q_table import QTable
 import random
 
+
 class EpsilonGreedy:
     def __init__(self) -> None:
         self.epsilon = 1.0

@@ -19,7 +19,7 @@ def save(q_table: QTable, filename: str) -> None:
         return
 
 
-def load(filename) -> dict:
+def load(filename: str) -> dict:
 
     """charger un fichier texte , convertir en dictionnaire"""
 
