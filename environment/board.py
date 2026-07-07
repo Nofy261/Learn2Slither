@@ -58,12 +58,6 @@ class Board:
                 self.green_apples.append((x, y))
 
     def spawn_red_apple(self) -> None:
-
-        """
-        Génère 1 pomme rouge à une position aléatoire libre.
-        Une position est libre si elle n'est pas occupée par le serpent
-        ou par une pomme verte.
-        """
         while True:
             x = random.randint(0, self.width - 1)
             y = random.randint(0, self.height - 1)

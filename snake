@@ -33,7 +33,7 @@ def run_session(game: Game, q_agent: QAgent,
                 args: argparse.Namespace,
                 display: Display | None) -> None:
     game.reset()
-    state = game.get_state()
+    state = game.state
     game_over = False
     steps = 0
 
